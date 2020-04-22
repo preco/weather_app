@@ -158,22 +158,13 @@ O n&iacute;vel indicado &eacute; em rela&ccedil;&atilde;o ao n&iacute;vel do mar
     body
       |> Floki.find("table.table_estacao")
       |> Floki.find("tr")
-      |> Enum.reduce(Map.new, fn x, acc ->
+      |> Enum.reduce(Map.new, fn(column, attr_map) ->
         {_, [_],
-        [{_,_, [nome]},
-        {_, _, [valor]}]
-        } = x
-        Map.put(acc, nome, normalize_value(valor))
+        [{_,_, [attr_name]},
+        {_, _, [attr_value]}]
+        } = column
+        Map.put(attr_map, attr_name, normalize_value(attr_value))
       end)
-
-      # Enum.map_reduce(fn colunas->
-       # {_, [_],
-        #[{_,_, [nome]},
-        #{_, _, [valor]}]
-        #} = colunas
-      #end, %{}, fn _acc -> Map.put(mapa_valores, String.to_atom(nome), normalize_value(valor)) end )
-      #Map.put(mapa_valores, String.to_atom(nome), normalize_value(valor))
-
   end
 
   def normalize_value(value) do
