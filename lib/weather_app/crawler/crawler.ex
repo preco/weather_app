@@ -6,12 +6,21 @@ defmodule WeatherApp.Crawler do
     url = "http://www.plantaragronomia.eng.br/"
     case HTTPoison.get(url) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        get_table_info(body)
+        handle_table_info(body)
       {:ok, %HTTPoison.Response{status_code: 404}} ->
         Logger.info "Not found"
+      {:ok, %HTTPoison.Response{status_code: 500}} ->
+        get_url_info()
       {:error, %HTTPoison.Error{reason: reason}} ->
         IO.inspect reason
     end
+  end
+
+  defp handle_table_info(body) do
+    body
+    |> get_table_info
+    |> IO.inspect
+    |> Poison.encode!
   end
 
   def get_url() do
@@ -163,15 +172,28 @@ O n&iacute;vel indicado &eacute; em rela&ccedil;&atilde;o ao n&iacute;vel do mar
         [{_,_, [attr_name]},
         {_, _, [attr_value]}]
         } = column
-        Map.put(attr_map, attr_name, normalize_value(attr_value))
+        Map.put(attr_map, normalize_string(attr_name), normalize_value(attr_value))
       end)
   end
 
-  def normalize_value(value) do
+  defp normalize_value(value) do
     value_without_comma = value
-      |> :unicode.characters_to_binary(:latin1)
+      |> normalize_string
       |> String.replace(",", ".")
-    Regex.replace(~r/[^0-9.E]+/, value_without_comma, "")
+    Regex.replace(~r/[^0-9.NSEO]+/, value_without_comma, "")
   end
 
+  def normalize_string(raw) do
+    codepoints = String.codepoints(raw)
+    Enum.reduce(codepoints,
+      fn(w, result) ->
+        cond do
+          String.valid?(w) ->
+            result <> w
+          true ->
+            << parsed :: 8>> = w
+            result <>   << parsed :: utf8 >>
+          end
+        end)
+   end
 end
