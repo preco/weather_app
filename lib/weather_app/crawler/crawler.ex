@@ -1,5 +1,10 @@
 defmodule WeatherApp.Crawler do
   require Logger
+
+  @spec magic :: :ok
+  def magic() do
+    IO.puts 'It\'s a kind of magic'
+  end
   @moduledoc false
   def get_url_info() do
     Logger.info("Iniciando crawler")
@@ -9,7 +14,7 @@ defmodule WeatherApp.Crawler do
         handle_table_info(body)
       {:ok, %HTTPoison.Response{status_code: 404}} ->
         Logger.info "Not found"
-      {:ok, %HTTPoison.Response{status_code: 500}} ->
+      {_, %HTTPoison.Response{status_code: 500}} ->
         get_url_info()
       {:error, %HTTPoison.Error{reason: reason}} ->
         IO.inspect reason

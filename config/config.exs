@@ -26,8 +26,8 @@ config :phoenix, :json_library, Jason
 # Configures scheduler
 config :weather_app, WeatherApp.Scheduler,
   jobs: [
-    # Every 1 minute
-    {"*/1 * * * *",   fn -> IO.puts("TESTE") end},    
+    # Every 60 minutes
+    {"*/60 * * * *",   fn -> WeatherApp.Crawler.magic end},
   ]
 
 # Import environment specific config. This must remain at the bottom
