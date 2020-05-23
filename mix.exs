@@ -43,7 +43,8 @@
         {:httpoison, "~> 1.4"},
         {:floki, "~> 0.20.0"},
         {:poison, "~> 3.1"},
-        {:plug_cowboy, "~> 2.0"}
+        {:plug_cowboy, "~> 2.0"},
+        {:timex, "~> 3.6"}
       ]
     end
   end

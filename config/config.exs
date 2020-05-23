@@ -27,7 +27,7 @@ config :phoenix, :json_library, Jason
 config :weather_app, WeatherApp.Scheduler,
   jobs: [
     # Every 60 minutes
-    {"*/60 * * * *",   fn -> WeatherApp.Crawler.magic end},
+    {"*/60 * * * *",   fn -> WeatherApp.Crawler.get_url_info end},
   ]
 
 # Import environment specific config. This must remain at the bottom
