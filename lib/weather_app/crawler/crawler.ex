@@ -1,10 +1,6 @@
 defmodule WeatherApp.Crawler do
   require Logger
 
-  @spec magic :: :ok
-  def magic() do
-    IO.puts 'It\'s a kind of magic'
-  end
   @moduledoc false
   def get_url_info() do
     Logger.info("Iniciando crawler")
