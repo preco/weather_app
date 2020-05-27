@@ -16,11 +16,12 @@ defmodule WeatherAppWeb.Router do
   scope "/", WeatherAppWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    get "/", DefaultController, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", WeatherAppWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", WeatherAppWeb do
+     pipe_through :api
+     get "/last", InfoController, :show_last
+     get "/interval", InfoController, :show_interval
+  end
 end
