@@ -13,8 +13,8 @@ config :weather_app, WeatherAppWeb.Endpoint,
   http: [port: {:system, "PORT"}],
   load_from_system_env: true,
   url: [scheme: "https", host: "tubarao-weather.herokuapp.com", port: 443],
-  force_ssl: [rewrite_on: [:x_forwarded_proto]],
-  cache_static_manifest: "priv/static/cache_manifest.json"
+  force_ssl: [rewrite_on: [:x_forwarded_proto]]
+  #cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
 config :logger, level: :info
