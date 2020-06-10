@@ -21,11 +21,17 @@ defmodule WeatherApp.Crawler do
     body
     |> get_table_info
     |> create_measurement
-    |> WeatherApp.Mongo.save
+    |> save
   end
-  def create_measurement(value) do
-    current_date = Timex.now("America/Sao_Paulo") |> Timex.format!("{ISO:Extended}")
-    %Measurement{date_time: current_date, weather_data: value}
+  defp create_measurement(measurement_map) do
+    measured_at = DateTime.utc_now |> DateTime.truncate(:second)
+    measurement = struct(%WeatherApp.Measurement{}, measurement_map)
+    %{measurement | measured_at: measured_at}
+  end
+
+
+  defp save(measurement) do
+    WeatherApp.Repo.insert(measurement)
   end
 
   defp get_table_info(body) do
@@ -37,8 +43,21 @@ defmodule WeatherApp.Crawler do
         [{_,_, [attr_name]},
         {_, _, [attr_value]}]
         } = column
-        Map.put(attr_map, normalize_string(attr_name), normalize_value(attr_value))
+        Map.put(attr_map, convert_name(attr_name), convert_value(attr_name, attr_value))
       end)
+  end
+
+  defp convert_name(name) do
+    name
+    |> normalize_string
+    |> WeatherApp.Measurement.convert_name
+  end
+
+  defp convert_value(name, value) do
+    attr = convert_name(name)
+    value
+    |> normalize_value
+    |> WeatherApp.Measurement.convert_value(attr)
   end
 
   defp normalize_value(value) do
@@ -48,7 +67,7 @@ defmodule WeatherApp.Crawler do
     Regex.replace(~r/[^0-9.NSEO]+/, value_without_comma, "")
   end
 
-  def normalize_string(raw) do
+  defp normalize_string(raw) do
     codepoints = String.codepoints(raw)
     Enum.reduce(codepoints,
       fn(w, result) ->
@@ -58,7 +77,8 @@ defmodule WeatherApp.Crawler do
           true ->
             << parsed :: 8>> = w
             result <>   << parsed :: utf8 >>
-          end
-        end)
-   end
+        end
+      end)
+      |> String.trim
+  end
 end

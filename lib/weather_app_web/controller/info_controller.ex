@@ -2,7 +2,7 @@ defmodule WeatherAppWeb.InfoController do
   use WeatherAppWeb, :controller
 
   def show_last(conn, _params) do
-    pretty_json(conn, WeatherApp.Mongo.get_last)
+    text conn, "Not implemented yet"
   end
 
   defp pretty_json(conn, data) do

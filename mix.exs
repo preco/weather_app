@@ -38,13 +38,11 @@
         {:phoenix_live_reload, "~> 1.2", only: :dev},
         {:gettext, "~> 0.11"},
         {:jason, "~> 1.0"},
-        {:mongodb, "~> 0.5.1"},
         {:quantum, "~> 3.0-rc"},
         {:httpoison, "~> 1.4"},
         {:floki, "~> 0.20.0"},
         {:poison, "~> 3.1"},
         {:plug_cowboy, "~> 2.0"},
-        {:timex, "~> 3.6"},
         {:ecto_sql, "~> 3.0"},
         {:postgrex, ">= 0.0.0"}
       ]
