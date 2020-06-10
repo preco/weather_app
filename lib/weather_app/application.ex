@@ -10,6 +10,7 @@ defmodule WeatherApp.Application do
     import Supervisor.Spec, warn: false
     children = [
       WeatherApp.Scheduler,
+      WeatherApp.Repo,
       # Start the endpoint when the application starts
       WeatherAppWeb.Endpoint
     ]

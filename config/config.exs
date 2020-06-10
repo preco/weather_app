@@ -7,6 +7,14 @@
 # General application configuration
 use Mix.Config
 
+config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
+
+config :weather_app, WeatherApp.Repo,
+  database: "perereco_weather",
+  username: "perereco_weather_user",
+  password: "YPVg9SREwLrp8jd",
+  hostname: "localhost"
+
 # Configures the endpoint
 config :weather_app, WeatherAppWeb.Endpoint,
   url: [host: "localhost"],
@@ -30,6 +38,8 @@ config :weather_app, WeatherApp.Scheduler,
     {"*/60 * * * *",   fn -> WeatherApp.Crawler.get_url_info end},
   ]
 
+config :weather_app,
+  ecto_repos: [WeatherApp.Repo]
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
