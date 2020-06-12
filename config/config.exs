@@ -10,10 +10,11 @@ use Mix.Config
 config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
 
 config :weather_app, WeatherApp.Repo,
-  database: "perereco_weather",
-  username: "perereco_weather_user",
-  password: "YPVg9SREwLrp8jd",
-  hostname: "localhost"
+  pool_size: 3,
+  database: "xyebmrkw",
+  username: "xyebmrkw",
+  password: "lLyr2tb5YOHTIhZ5JXZrgk5KsBS9Xc-i",
+  hostname: "tuffi.db.elephantsql.com"
 
 # Configures the endpoint
 config :weather_app, WeatherAppWeb.Endpoint,
