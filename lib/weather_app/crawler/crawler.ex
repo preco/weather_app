@@ -1,7 +1,16 @@
 defmodule WeatherApp.Crawler do
+  @moduledoc  """
+  Módulo responsável por obter os valores das medições,
+  convertê-los para o formato do banco de dados e
+  salvá-los.
+  """
+  @moduledoc since: "1.0.0"
+
   require Logger
 
-  @moduledoc false
+  @doc """
+  Função responsável por acessar o site
+  """
   def get_url_info() do
     Logger.info("Iniciando crawler")
     url = "http://www.plantaragronomia.eng.br/"
@@ -23,6 +32,7 @@ defmodule WeatherApp.Crawler do
     |> create_measurement
     |> save
   end
+
   defp create_measurement(measurement_map) do
     measured_at = DateTime.utc_now |> DateTime.truncate(:second)
     measurement = struct(%WeatherApp.Measurement{}, measurement_map)
@@ -43,7 +53,8 @@ defmodule WeatherApp.Crawler do
         [{_,_, [attr_name]},
         {_, _, [attr_value]}]
         } = column
-        Map.put(attr_map, convert_name(attr_name), convert_value(attr_name, attr_value))
+        converted_name = convert_name(attr_name)
+        Map.put(attr_map, converted_name, convert_value(converted_name, attr_value))
       end)
   end
 
@@ -54,10 +65,9 @@ defmodule WeatherApp.Crawler do
   end
 
   defp convert_value(name, value) do
-    attr = convert_name(name)
     value
     |> normalize_value
-    |> WeatherApp.Measurement.convert_value(attr)
+    |> WeatherApp.Measurement.convert_value(name)
   end
 
   defp normalize_value(value) do

@@ -43,4 +43,5 @@ defmodule WeatherApp.Measurement do
     {parsed, _} = Float.parse(value)
     parsed
   end
+
 end
