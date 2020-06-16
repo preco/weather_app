@@ -2,7 +2,7 @@ defmodule WeatherAppWeb.InfoController do
   use WeatherAppWeb, :controller
 
   def show_last(conn, _params) do
-    pretty_json(conn, WeatherApp.MeasurementService.get_last_measurement_json())
+    pretty_json(conn, WeatherApp.MeasurementService.get_last_measurement_map)
   end
 
   defp pretty_json(conn, data) do

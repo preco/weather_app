@@ -10,7 +10,7 @@ defmodule WeatherApp.MeasurementService do
     |> Map.drop([:id])
   end
 
-  defp convert_date_time(map) do
+  defp shift_zone_from_datetime_attributes(map) do
     map
     |> Enum.map(fn {k, v} -> {k, shift_zone(v)} end)
     |> Enum.into(%{})
@@ -18,17 +18,31 @@ defmodule WeatherApp.MeasurementService do
   end
 
   defp shift_zone(value) do
-    case value do
-      value when is_struct(value) -> DateTime.shift_zone!(value, "America/Sao_Paulo")
-      _ -> value
+    if is_a_datetime? value do
+      DateTime.shift_zone!(value, "America/Sao_Paulo")
+    else
+      value
     end
   end
 
-  def get_last_measurement_json() do
+  defp is_a_datetime?(%DateTime{}) do
+    true
+  end
+
+  defp is_a_datetime?(_) do
+    false
+  end
+  @doc """
+  Busca o registro que possuir a data de medição mais atual,
+  converte em um mapa de atributos,
+  remove os atributos que não correspondem a dados
+  e muda o fuso horário das datas para o horário de Brasília
+  """
+  def get_last_measurement_map() do
     get_last_measurement()
     |> Map.from_struct
     |> remove_non_visible_attributes
-    |> convert_date_time
+    |> shift_zone_from_datetime_attributes
   end
 
 end
