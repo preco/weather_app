@@ -12,26 +12,18 @@ defmodule WeatherApp.MeasurementService do
 
   defp shift_zone_from_datetime_attributes(map) do
     map
-    |> Enum.map(fn {k, v} -> {k, shift_zone(v)} end)
+    |> Enum.map(fn {k, v} -> {k, shift_zone_if_datetime(v)} end)
     |> Enum.into(%{})
 
   end
 
-  defp shift_zone(value) do
-    if is_a_datetime? value do
-      DateTime.shift_zone!(value, "America/Sao_Paulo")
-    else
-      value
+  defp shift_zone_if_datetime(value) do
+    case value do
+      %DateTime{} -> DateTime.shift_zone!(value, "America/Sao_Paulo")
+      _ -> value
     end
   end
 
-  defp is_a_datetime?(%DateTime{}) do
-    true
-  end
-
-  defp is_a_datetime?(_) do
-    false
-  end
   @doc """
   Busca o registro que possuir a data de medição mais atual,
   converte em um mapa de atributos,
